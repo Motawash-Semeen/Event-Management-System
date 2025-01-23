@@ -16,6 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $name = Validator::sanitizeInput($_POST['name']);
     $description = Validator::sanitizeInput($_POST['description']);
     $event_date = Validator::sanitizeInput($_POST['event_date']);
+    $max_capacity = Validator::sanitizeInput($_POST['max_capacity']);
     $user_id = $_SESSION['user_id'];
     
     try {
@@ -24,8 +25,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $check_stmt->execute([$event_id, $user_id]);
         
         if ($check_stmt->rowCount() > 0) {
-            $stmt = $db->prepare("UPDATE events SET name = ?, description = ?, event_date = ? WHERE id = ? AND user_id = ?");
-            $result = $stmt->execute([$name, $description, $event_date, $event_id, $user_id]);
+            $stmt = $db->prepare("UPDATE events SET name = ?, description = ?, event_date = ?, max_capacity = ? WHERE id = ? AND user_id = ?");
+            $result = $stmt->execute([$name, $description, $event_date, $max_capacity, $event_id, $user_id]);
             
             echo json_encode([
                 'success' => $result,

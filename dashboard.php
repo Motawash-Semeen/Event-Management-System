@@ -177,6 +177,40 @@ $isAdmin = AdminAuth::isAdmin();
         </div>
     </div>
 
+    <!-- Edit Event Modal -->
+    <div class="modal fade" id="editEventModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Event</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editEventForm">
+                        <input type="hidden" id="editEventId" name="event_id">
+                        <div class="mb-3">
+                            <label for="editEventName" class="form-label">Event Name</label>
+                            <input type="text" class="form-control" id="editEventName" name="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editEventDescription" class="form-label">Description</label>
+                            <textarea class="form-control" id="editEventDescription" name="description" rows="3"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editEventDate" class="form-label">Date & Time</label>
+                            <input type="datetime-local" class="form-control" id="editEventDate" name="event_date" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editMaxCapacity" class="form-label">Maximum Capacity</label>
+                            <input type="number" class="form-control" id="editMaxCapacity" name="max_capacity" required min="1">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Update Event</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Export Modal (Admin Only) -->
     <?php if ($isAdmin): ?>
         <div class="modal fade" id="exportModal" tabindex="-1">
@@ -230,6 +264,7 @@ $isAdmin = AdminAuth::isAdmin();
                     date_filter: dateFilter
                 }, function(responses) {
                     const response = JSON.parse(responses);
+                    console.log(response);
                     if (response.success) {
                         displayEvents(response.events);
                         updatePagination(response.pagination);
@@ -278,19 +313,19 @@ $isAdmin = AdminAuth::isAdmin();
                         <i class="bi bi-x-circle"></i> Cancel Registration
                     </button>
                 `;
-                } else if (event.is_full) {
-                    buttons += `
+            } else if (event.registered_count >= event.max_capacity) {
+                buttons += `
                     <button class="btn btn-sm btn-secondary" disabled>
                         <i class="bi bi-exclamation-circle"></i> Event Full
                     </button>
                 `;
-                } else {
-                    buttons += `
+            } else if (!event.is_admin) {
+                buttons += `
                     <button class="btn btn-sm btn-success register-event" data-id="${event.id}">
                         <i class="bi bi-check-circle"></i> Register
                     </button>
                 `;
-                }
+            }
 
                 <?php if ($isAdmin): ?>
                     buttons += `
@@ -396,20 +431,62 @@ $isAdmin = AdminAuth::isAdmin();
                     $.post('events/delete.php', {
                         event_id: eventId
                     }, function(response) {
-                        if (response.success) {
+                        const parsedResponse = JSON.parse(response);
+                        if (parsedResponse.success) {
                             loadEvents();
                         }
-                        alert(response.message);
+                        alert(parsedResponse.message);
                     });
                 }
             });
 
+            $(document).on('click', '.edit-event', function() {
+                const eventId = $(this).data('id');
+                $.get('events/get_event.php', { event_id: eventId }, function(response) {
+                    const event = JSON.parse(response);
+                    if (event.success) {
+                        $('#editEventId').val(event.data.id);
+                        $('#editEventName').val(event.data.name);
+                        $('#editEventDescription').val(event.data.description);
+                        $('#editEventDate').val(event.data.event_date.replace(' ', 'T'));
+                        $('#editMaxCapacity').val(event.data.max_capacity);
+                        $('#editEventModal').modal('show');
+                    } else {
+                        alert(event.message);
+                    }
+                });
+            });
+
+            $('#editEventForm').on('submit', function(e) {
+                e.preventDefault();
+                $.post('events/update.php', $(this).serialize(), function(response) {
+                    const parsedResponse = JSON.parse(response);
+                    if (parsedResponse.success) {
+                        $('#editEventModal').modal('hide');
+                        loadEvents();
+                    }
+                    alert(parsedResponse.message);
+                });
+            });
+
+            // Register for event
+            $(document).on('click', '.register-event', function() {
+                const eventId = $(this).data('id');
+                $.post('events/register.php', { event_id: eventId }, function(response) {
+                    const parsedResponse = JSON.parse(response);
+                    if (parsedResponse.success) {
+                        loadEvents();
+                    }
+                    alert(parsedResponse.message);
+                });
+            });
 
             // Load events for export dropdown
             function loadExportEvents() {
                 $.get('events/list.php', {
                     limit: 1000
-                }, function(response) {
+                }, function(responses) {
+                    response = JSON.parse(responses);
                     if (response.success) {
                         const $select = $('#exportEvent');
                         $select.empty();

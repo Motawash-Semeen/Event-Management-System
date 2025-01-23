@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $stmt = $db->prepare("
             SELECT 
                 u.email,
-                u.name as attendee_name,
+                u.username as attendee_name,
                 er.registration_date,
                 er.status
             FROM event_registrations er
