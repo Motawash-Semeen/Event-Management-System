@@ -43,7 +43,7 @@ try {
                (SELECT COUNT(*) FROM event_registrations WHERE event_id = e.id AND user_id = ?) as is_registered
         FROM events e
         LEFT JOIN event_registrations er ON e.id = er.event_id
-        WHERE e.user_id = ? AND (e.name LIKE ? OR e.description LIKE ?)
+        WHERE (e.name LIKE ? OR e.description LIKE ?)
     ";
     if ($dateFilter === 'upcoming') {
         $eventsQuery .= " AND e.event_date >= CURDATE()";
@@ -59,11 +59,10 @@ try {
     ";
     $stmt = $db->prepare($eventsQuery);
     $stmt->bindParam(1, $_SESSION['user_id'], PDO::PARAM_INT);
-    $stmt->bindParam(2, $_SESSION['user_id'], PDO::PARAM_INT);
+    $stmt->bindParam(2, $searchTerm, PDO::PARAM_STR);
     $stmt->bindParam(3, $searchTerm, PDO::PARAM_STR);
-    $stmt->bindParam(4, $searchTerm, PDO::PARAM_STR);
-    $stmt->bindParam(5, $limit, PDO::PARAM_INT);
-    $stmt->bindParam(6, $offset, PDO::PARAM_INT);
+    $stmt->bindParam(4, $limit, PDO::PARAM_INT);
+    $stmt->bindParam(5, $offset, PDO::PARAM_INT);
     $stmt->execute();
     $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
 

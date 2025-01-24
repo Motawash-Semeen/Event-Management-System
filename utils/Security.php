@@ -1,14 +1,44 @@
 <?php
 class Security {
     private static $key = 'event-management-key';
+    private static $cipher = 'AES-256-CBC';
+
     public static function encrypt($data) {
-        $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
-        $encrypted = openssl_encrypt($data, 'aes-256-cbc', self::$key, 0, $iv);
-        return base64_encode($encrypted . '::' . $iv);
+        $ivlen = openssl_cipher_iv_length(self::$cipher);
+        $iv = openssl_random_pseudo_bytes($ivlen);
+        $encrypted = openssl_encrypt(
+            (string)$data, 
+            self::$cipher, 
+            self::$key, 
+            0, 
+            $iv
+        );
+        return base64_encode($iv . $encrypted);
     }
 
     public static function decrypt($data) {
-        list($encrypted_data, $iv) = explode('::', base64_decode($data), 2);
-        return openssl_decrypt($encrypted_data, 'aes-256-cbc', self::$key, 0, $iv);
+        try {
+            $data = base64_decode($data);
+            if ($data === false) {
+                return false;
+            }
+
+            $ivlen = openssl_cipher_iv_length(self::$cipher);
+            $iv = substr($data, 0, $ivlen);
+            $encrypted = substr($data, $ivlen);
+
+            $decrypted = openssl_decrypt(
+                $encrypted, 
+                self::$cipher, 
+                self::$key, 
+                0, 
+                $iv
+            );
+
+            return $decrypted !== false ? (int)$decrypted : false;
+        } catch (Exception $e) {
+            error_log('Decryption error: ' . $e->getMessage());
+            return false;
+        }
     }
 }

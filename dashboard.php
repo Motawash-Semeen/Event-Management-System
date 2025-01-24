@@ -264,7 +264,6 @@ $isAdmin = AdminAuth::isAdmin();
                     date_filter: dateFilter
                 }, function(responses) {
                     const response = JSON.parse(responses);
-                    console.log(response);
                     if (response.success) {
                         displayEvents(response.events);
                         updatePagination(response.pagination);

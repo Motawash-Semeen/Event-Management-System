@@ -2,6 +2,7 @@
 session_start();
 require_once '../config/database.php';
 require_once '../utils/AdminAuth.php';
+require_once '../utils/Security.php';
 
 if (!isset($_SESSION['user_id'])) {
     echo json_encode(['success' => false, 'message' => 'Unauthorized']);
@@ -11,7 +12,18 @@ if (!isset($_SESSION['user_id'])) {
 $database = new Database();
 $db = $database->getConnection();
 
-$event_id = isset($_POST['event_id']) ? (int)$_POST['event_id'] : 0;
+// Validate and decrypt event_id
+if (!isset($_POST['event_id']) || empty($_POST['event_id'])) {
+    throw new Exception('Invalid event ID');
+}
+
+$encrypted_event_id = $_POST['event_id'];
+$event_id = Security::decrypt($encrypted_event_id);
+
+if (!$event_id || !is_numeric($event_id)) {
+    throw new Exception('Invalid event ID format');
+}
+
 $user_id = $_SESSION['user_id'];
 $isAdmin = AdminAuth::isAdmin();
 
