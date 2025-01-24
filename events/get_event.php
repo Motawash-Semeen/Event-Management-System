@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once '../config/database.php';
+require_once '../utils/Security.php';
 
 if (!isset($_SESSION['user_id'])) {
     echo json_encode(['success' => false, 'message' => 'Unauthorized']);
@@ -10,7 +11,8 @@ if (!isset($_SESSION['user_id'])) {
 $database = new Database();
 $db = $database->getConnection();
 
-$event_id = isset($_GET['event_id']) ? (int)$_GET['event_id'] : 0;
+$encrypted_event_id = isset($_GET['event_id']) ? $_GET['event_id'] : '';
+$event_id = Security::decrypt($encrypted_event_id);
 $user_id = $_SESSION['user_id'];
 
 try {

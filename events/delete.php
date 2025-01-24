@@ -2,6 +2,7 @@
 session_start();
 require_once '../config/database.php';
 require_once '../utils/Validator.php';
+require_once '../utils/Security.php';
 
 if (!isset($_SESSION['user_id'])) {
     header('Location: ../index.php');
@@ -13,6 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $db = $database->getConnection();
     
     $event_id = Validator::sanitizeInput($_POST['event_id']);
+    $event_id = Security::decrypt($event_id);
     $user_id = $_SESSION['user_id'];
     
     try {

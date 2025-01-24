@@ -279,29 +279,39 @@ $isAdmin = AdminAuth::isAdmin();
             // Display Events Function
             function displayEvents(events) {
                 $('#eventsList').empty();
-                events.forEach(function(event) {
-                    const eventDate = new Date(event.event_date);
+                if (events.length === 0) {
                     $('#eventsList').append(`
-                    <div class="col-md-4 mb-3">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="registration-count">
-                                    ${event.registered_count}/${event.max_capacity}
-                                </div>
-                                <h5 class="card-title">${event.name}</h5>
-                                <p class="card-text">${event.description}</p>
-                                <p class="card-text">
-                                    <small class="text-muted">
-                                        <i class="bi bi-calendar"></i> ${eventDate.toLocaleDateString()}<br>
-                                        <i class="bi bi-clock"></i> ${eventDate.toLocaleTimeString()}
-                                    </small>
-                                </p>
-                                ${renderEventButtons(event)}
+                        <div class="col-12 text-center">
+                            <div class="alert alert-info" role="alert">
+                                No events found.
                             </div>
                         </div>
-                    </div>
-                `);
-                });
+                    `);
+                } else {
+                    events.forEach(function(event) {
+                        const eventDate = new Date(event.event_date);
+                        $('#eventsList').append(`
+                            <div class="col-md-4 mb-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="registration-count">
+                                            ${event.registered_count}/${event.max_capacity}
+                                        </div>
+                                        <h5 class="card-title">${event.name}</h5>
+                                        <p class="card-text">${event.description}</p>
+                                        <p class="card-text">
+                                            <small class="text-muted">
+                                                <i class="bi bi-calendar"></i> ${eventDate.toLocaleDateString()}<br>
+                                                <i class="bi bi-clock"></i> ${eventDate.toLocaleTimeString()}
+                                            </small>
+                                        </p>
+                                        ${renderEventButtons(event)}
+                                    </div>
+                                </div>
+                            </div>
+                        `);
+                    });
+                }
             }
 
             function renderEventButtons(event) {
@@ -388,11 +398,15 @@ $isAdmin = AdminAuth::isAdmin();
             }
 
             // Event Handlers
-            $('#searchButton, #searchInput').on('click keyup', function(e) {
+            $('#searchButton').on('click', function(e) {
                 if (e.type === 'click' || e.keyCode === 13) {
                     currentPage = 1;
                     loadEvents();
                 }
+            });
+            $('#searchInput').on('keyup', function(e) {
+                currentPage = 1;
+                loadEvents();
             });
 
             $('#dateFilter, #sortBy, #pageSize').on('change', function() {
