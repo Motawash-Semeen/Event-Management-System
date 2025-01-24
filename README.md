@@ -4,7 +4,7 @@
 - [x] Event Sorting and Searching issue
 - [x] Event Registration form and max size validation add
 - [x] ID encryption and Decryption
-- [ ] Logout Funcional
+- [x] Logout Funcional
 - [ ] UI/UX Improve
 - [ ] Code improve
 - [ ] Ensure client-side and server-side validation.
