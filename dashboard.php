@@ -66,7 +66,7 @@ $isAdmin = AdminAuth::isAdmin();
                     <span class="navbar-text me-3">
                         Welcome, <?php echo htmlspecialchars($_SESSION['email']); ?>
                     </span>
-                    <a href="logout.php" class="btn btn-outline-light">Logout</a>
+                    <a href="auth/logout.php" class="btn btn-outline-light">Logout</a>
                 </div>
             </div>
         </div>
