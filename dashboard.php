@@ -427,15 +427,18 @@ $isAdmin = AdminAuth::isAdmin();
             // Create event
             $('#createEventForm').on('submit', function(e) {
                 e.preventDefault();
-                $.post('events/create.php', $(this).serialize(), function(response) {
-                    const parsedResponse = JSON.parse(response);
-                    if (parsedResponse.success) {
-                        $('#createEventModal').modal('hide');
-                        $('#createEventForm')[0].reset();
-                        loadEvents();
-                    }
-                    alert(parsedResponse.message);
-                });
+                const formData = $(this).serialize();
+                if (validateEventForm()) {
+                    $.post('events/create.php', formData, function(response) {
+                        const parsedResponse = JSON.parse(response);
+                        if (parsedResponse.success) {
+                            $('#createEventModal').modal('hide');
+                            $('#createEventForm')[0].reset();
+                            loadEvents();
+                        }
+                        alert(parsedResponse.message);
+                    });
+                }
             });
 
             // Delete event
@@ -538,6 +541,34 @@ $isAdmin = AdminAuth::isAdmin();
 
             // Load events on page load
             loadEvents();
+
+            // Client-side validation for event forms
+            function validateEventForm() {
+                let isValid = true;
+                const name = $('#eventName').val() || $('#editEventName').val();
+                const description = $('#eventDescription').val() || $('#editEventDescription').val();
+                const eventDate = $('#eventDate').val() || $('#editEventDate').val();
+                const maxCapacity = $('#maxCapacity').val() || $('#editMaxCapacity').val();
+
+                if (!name || name.trim() === '') {
+                    isValid = false;
+                    alert('Event name is required.');
+                }
+                if (!description || description.trim() === '') {
+                    isValid = false;
+                    alert('Event description is required.');
+                }
+                if (!eventDate || eventDate.trim() === '') {
+                    isValid = false;
+                    alert('Event date and time are required.');
+                }
+                if (!maxCapacity || maxCapacity <= 0) {
+                    isValid = false;
+                    alert('Maximum capacity must be a positive number.');
+                }
+
+                return isValid;
+            }
         });
     </script>
 </body>

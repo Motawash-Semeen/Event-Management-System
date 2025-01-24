@@ -2,6 +2,7 @@
 session_start();
 require_once '../config/database.php';
 require_once '../utils/AdminAuth.php';
+require_once '../utils/Validator.php';
 require_once '../utils/Security.php';
 
 if (!isset($_SESSION['user_id'])) {
@@ -12,13 +13,13 @@ if (!isset($_SESSION['user_id'])) {
 $database = new Database();
 $db = $database->getConnection();
 
-$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-$limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 10;
+$page = isset($_GET['page']) ? (int)Validator::sanitizeInput($_GET['page']) : 1;
+$limit = isset($_GET['limit']) ? (int)Validator::sanitizeInput($_GET['limit']) : 10;
 $offset = ($page - 1) * $limit;
-$sort = isset($_GET['sort']) ? $_GET['sort'] : 'event_date';
-$order = isset($_GET['order']) && strtolower($_GET['order']) === 'desc' ? 'DESC' : 'ASC';
-$dateFilter = isset($_GET['date_filter']) ? $_GET['date_filter'] : 'all';
-$searchTerm = isset($_GET['search']) ? '%' . $_GET['search'] . '%' : '%';
+$sort = isset($_GET['sort']) ? Validator::sanitizeInput($_GET['sort']) : 'event_date';
+$order = isset($_GET['order']) && strtolower(Validator::sanitizeInput($_GET['order'])) === 'desc' ? 'DESC' : 'ASC';
+$dateFilter = isset($_GET['date_filter']) ? Validator::sanitizeInput($_GET['date_filter']) : 'all';
+$searchTerm = isset($_GET['search']) ? '%' . Validator::sanitizeInput($_GET['search'] ). '%' : '%';
 $isAdmin = AdminAuth::isAdmin();
 
 try {
