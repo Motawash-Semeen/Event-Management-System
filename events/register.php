@@ -11,6 +11,7 @@ if (!isset($_SESSION['user_id'])) {
 
 $database = new Database();
 $db = $database->getConnection();
+$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 // Validate and decrypt event_id
 if (!isset($_POST['event_id']) || empty($_POST['event_id'])) {
@@ -55,6 +56,6 @@ try {
     } else {
         echo json_encode(['success' => false, 'message' => 'Event not found']);
     }
-} catch(PDOException $e) {
+} catch(Throwable $e) {
     echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
 }

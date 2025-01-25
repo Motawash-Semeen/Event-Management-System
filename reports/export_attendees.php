@@ -12,6 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     
     $database = new Database();
     $db = $database->getConnection();
+    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     
     try {
         // Get event details

@@ -7,6 +7,7 @@ class AdminAuth {
         
         $database = new Database();
         $db = $database->getConnection();
+        $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         
         $stmt = $db->prepare("SELECT is_admin FROM users WHERE id = ?");
         $stmt->execute([$_SESSION['user_id']]);

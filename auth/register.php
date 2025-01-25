@@ -7,6 +7,7 @@ header('Content-Type: application/json');
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $database = new Database();
     $db = $database->getConnection();
+    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     
     $email = Validator::sanitizeInput($_POST['email']);
     $username = Validator::sanitizeInput($_POST['username']);
@@ -51,7 +52,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } else {
             throw new Exception('Failed to create user');
         }
-    } catch(PDOException $e) {
+    } catch(Throwable $e) {
         error_log($e->getMessage());
         echo json_encode([
             'success' => false,

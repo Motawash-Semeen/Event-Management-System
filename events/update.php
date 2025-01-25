@@ -11,6 +11,7 @@ if (!isset($_SESSION['user_id'])) {
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $database = new Database();
     $db = $database->getConnection();
+    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     
     $event_id = Validator::sanitizeInput($_POST['event_id']);
     $name = Validator::sanitizeInput($_POST['name']);
@@ -38,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 'message' => 'Event not found or unauthorized'
             ]);
         }
-    } catch(PDOException $e) {
+    } catch(Throwable $e) {
         echo json_encode([
             'success' => false,
             'message' => 'Database error: ' . $e->getMessage()

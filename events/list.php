@@ -12,6 +12,8 @@ if (!isset($_SESSION['user_id'])) {
 
 $database = new Database();
 $db = $database->getConnection();
+$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
 
 $page = isset($_GET['page']) ? (int)Validator::sanitizeInput($_GET['page']) : 1;
 $limit = isset($_GET['limit']) ? (int)Validator::sanitizeInput($_GET['limit']) : 10;
@@ -85,9 +87,9 @@ try {
             'total_events' => $totalEvents
         ]
     ]);
-} catch(PDOException $e) {
+} catch(Throwable $e) {
     echo json_encode([
         'success' => false,
-        'message' => 'Database error: ' . $e->getMessage()
+        'message' => 'Error: ' . $e->getMessage()
     ]);
 }

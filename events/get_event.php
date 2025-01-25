@@ -10,6 +10,7 @@ if (!isset($_SESSION['user_id'])) {
 
 $database = new Database();
 $db = $database->getConnection();
+$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 $encrypted_event_id = isset($_GET['event_id']) ? $_GET['event_id'] : '';
 $event_id = Security::decrypt($encrypted_event_id);
@@ -25,6 +26,6 @@ try {
     } else {
         echo json_encode(['success' => false, 'message' => 'Event not found or unauthorized']);
     }
-} catch(PDOException $e) {
+} catch(Throwable $e) {
     echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
 }

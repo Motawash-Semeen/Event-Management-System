@@ -7,6 +7,7 @@ AdminAuth::requireAdmin();
 
 $database = new Database();
 $db = $database->getConnection();
+$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 try {
     $stmt = $db->prepare("
@@ -24,7 +25,7 @@ try {
         'total_events' => $stats['total_events'],
         'total_registrations' => $stats['total_registrations']
     ]);
-} catch(PDOException $e) {
+} catch(Throwable $e) {
     echo json_encode([
         'success' => false,
         'message' => 'Database error: ' . $e->getMessage()

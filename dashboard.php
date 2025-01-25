@@ -20,25 +20,120 @@ $isAdmin = AdminAuth::isAdmin();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet">
     <style>
-        .loading-spinner {
-            display: none;
-        }
+    :root {
+        --primary: #4f46e5;
+        --primary-hover: #4338ca;
+        --surface: #ffffff;
+        --surface-hover: #f8fafc;
+        --text: #1f2937;
+        --text-light: #6b7280;
+        --success: #10b981;
+        --warning: #f59e0b;
+        --danger: #ef4444;
+    }
 
-        .card:hover {
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: box-shadow 0.3s ease-in-out;
-        }
+    body {
+        background: linear-gradient(135deg, #f6f7ff 0%, #eef1ff 100%);
+        font-family: 'Plus Jakarta Sans', sans-serif;
+    }
 
-        .registration-count {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(0, 0, 0, 0.1);
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 0.8em;
-        }
-    </style>
+    .navbar {
+        backdrop-filter: blur(10px);
+        background: rgba(79, 70, 229, 0.95) !important;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    .card {
+        border: none;
+        border-radius: 1rem;
+        background: var(--surface);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        overflow: hidden;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn {
+        border-radius: 0.75rem;
+        padding: 0.75rem 1.5rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+    }
+
+    .btn-primary {
+        background: var(--primary);
+        border: none;
+    }
+
+    .btn-primary:hover {
+        background: var(--primary-hover);
+    }
+
+    .registration-count {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: rgba(79, 70, 229, 0.1);
+        color: var(--primary);
+        padding: 0.5rem 1rem;
+        border-radius: 2rem;
+        font-weight: 500;
+    }
+
+    .modal-content {
+        border-radius: 1rem;
+        border: none;
+    }
+
+    .modal .form-control {
+        border-radius: 0.75rem;
+        padding: 0.75rem 1rem;
+        border: 2px solid #e5e7eb;
+        transition: all 0.3s ease;
+    }
+
+    .modal .form-control:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+    }
+
+    .loading-spinner {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1000;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .event-card {
+        animation: fadeIn 0.5s ease-out;
+    }
+
+    .pagination .page-link {
+        border-radius: 0.5rem;
+        margin: 0 0.25rem;
+        border: none;
+        color: var(--primary);
+    }
+
+    .pagination .page-item.active .page-link {
+        background: var(--primary);
+        color: white;
+    }
+</style>
 </head>
 
 <body>
@@ -62,7 +157,7 @@ $isAdmin = AdminAuth::isAdmin();
                         </li>
                     <?php endif; ?>
                 </ul>
-                <div class="d-flex">
+                <div class="d-flex align-items-center">
                     <span class="navbar-text me-3">
                         Welcome, <?php echo htmlspecialchars($_SESSION['email']); ?>
                     </span>
@@ -287,24 +382,27 @@ $isAdmin = AdminAuth::isAdmin();
                         </div>
                     `);
                 } else {
-                    events.forEach(function(event) {
+                    events.forEach(function(event, index) {
                         const eventDate = new Date(event.event_date);
+                        const delay = index * 100;
                         $('#eventsList').append(`
-                            <div class="col-md-4 mb-3">
-                                <div class="card">
-                                    <div class="card-body">
+                            <div class="col-md-4 mb-4">
+                                <div class="card event-card" style="animation-delay: ${delay}ms">
+                                    <div class="card-body p-4">
                                         <div class="registration-count">
                                             ${event.registered_count}/${event.max_capacity}
                                         </div>
-                                        <h5 class="card-title">${event.name}</h5>
-                                        <p class="card-text">${event.description}</p>
-                                        <p class="card-text">
-                                            <small class="text-muted">
-                                                <i class="bi bi-calendar"></i> ${eventDate.toLocaleDateString()}<br>
-                                                <i class="bi bi-clock"></i> ${eventDate.toLocaleTimeString()}
-                                            </small>
-                                        </p>
-                                        ${renderEventButtons(event)}
+                                        <h5 class="card-title mb-3">${event.name}</h5>
+                                        <p class="card-text text-muted mb-4">${event.description}</p>
+                                        <div class="d-flex align-items-center mb-3">
+                                            <i class="bi bi-calendar me-2 text-primary"></i>
+                                            <span class="text-muted">${eventDate.toLocaleDateString()}</span>
+                                            <i class="bi bi-clock ms-3 me-2 text-primary"></i>
+                                            <span class="text-muted">${eventDate.toLocaleTimeString()}</span>
+                                        </div>
+                                        <div class="d-flex gap-2">
+                                            ${renderEventButtons(event)}
+                                        </div>
                                     </div>
                                 </div>
                             </div>

@@ -1,6 +1,7 @@
 <?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -124,9 +125,19 @@
         }
 
         @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            75% { transform: translateX(10px); }
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-10px);
+            }
+
+            75% {
+                transform: translateX(10px);
+            }
         }
 
         .form-control.is-invalid {
@@ -134,6 +145,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="auth-container">
@@ -164,7 +176,7 @@
                             <button type="submit" class="btn btn-auth">Sign In</button>
                         </form>
                         <div class="auth-toggle">
-                            <p class="mb-0">Don't have an account? 
+                            <p class="mb-0">Don't have an account?
                                 <button type="button" class="toggle-btn" id="showRegister">Sign up</button>
                             </p>
                         </div>
@@ -210,7 +222,7 @@
                             <button type="submit" class="btn btn-auth">Create Account</button>
                         </form>
                         <div class="auth-toggle">
-                            <p class="mb-0">Already have an account? 
+                            <p class="mb-0">Already have an account?
                                 <button type="button" class="toggle-btn" id="showLogin">Sign in</button>
                             </p>
                         </div>
@@ -221,81 +233,104 @@
     </div>
 
     <script>
-    $(document).ready(function() {
-        $('#showRegister').click(function() {
-            $('.auth-forms').addClass('flipped');
-            $('#formTitle').text('Create Account');
-            $('#formSubtitle').text('Please fill in your details');
-        });
+        $(document).ready(function() {
+            $('#showRegister').click(function() {
+                $('.auth-forms').addClass('flipped');
+                $('#formTitle').text('Create Account');
+                $('#formSubtitle').text('Please fill in your details');
+            });
 
-        $('#showLogin').click(function() {
-            $('.auth-forms').removeClass('flipped');
-            $('#formTitle').text('Welcome Back');
-            $('#formSubtitle').text('Please sign in to continue');
-        });
+            $('#showLogin').click(function() {
+                $('.auth-forms').removeClass('flipped');
+                $('#formTitle').text('Welcome Back');
+                $('#formSubtitle').text('Please sign in to continue');
+            });
 
-        $('.password-toggle').click(function() {
-            const input = $(this).siblings('input');
-            const type = input.attr('type') === 'password' ? 'text' : 'password';
-            input.attr('type', type);
-            $(this).toggleClass('fa-eye fa-eye-slash');
-        });
+            $('.password-toggle').click(function() {
+                const input = $(this).siblings('input');
+                const type = input.attr('type') === 'password' ? 'text' : 'password';
+                input.attr('type', type);
+                $(this).toggleClass('fa-eye fa-eye-slash');
+            });
 
-        $('form').on('submit', function(e) {
-            e.preventDefault();
-            const form = $(this);
-            
-            if (validateForm(form)) {
-                const formData = form.serialize();
-                const url = form.attr('action');
-                
-                $.ajax({
-                    type: 'POST',
-                    url: url,
-                    data: formData,
-                    dataType: 'json',
-                    success: function(response) {
-                        if (response.success) {
-                            window.location.href = 'dashboard.php';
-                        } else {
-                            showError(form, response.message);
+            $('form').on('submit', function(e) {
+                e.preventDefault();
+                const form = $(this);
+
+                if (validateForm(form)) {
+                    const formData = form.serialize();
+                    const url = form.attr('action');
+
+                    $.ajax({
+                        type: 'POST',
+                        url: url,
+                        data: formData,
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.success) {
+                                window.location.href = 'dashboard.php';
+                            } else {
+                                showError(form, response.message);
+                            }
+                        },
+                        error: function() {
+                            showError(form, 'An error occurred. Please try again.');
                         }
-                    },
-                    error: function() {
-                        showError(form, 'An error occurred. Please try again.');
+                    });
+                }
+            });
+
+            function validateForm(form) {
+                let isValid = true;
+                const isRegisterForm = form.attr('id') === 'registerForm';
+                const email = form.find('input[name="email"]');
+                const password = form.find('input[name="password"]');
+                const confirmPassword = form.find('input[name="confirm_password"]');
+                const username = form.find('input[name="username"]');
+
+                // Reset validation states
+                form.find('.is-invalid').removeClass('is-invalid');
+
+                // Username validation (register only)
+                if (isRegisterForm && username.length) {
+                    if (!username.val()?.trim()) {
+                        username.addClass('is-invalid');
+                        isValid = false;
                     }
-                });
+                }
+
+                // Email validation
+                if (!email.val()?.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+                    email.addClass('is-invalid');
+                    isValid = false;
+                }
+
+                // Password validation
+                const passwordValue = password.val();
+                if (!passwordValue || passwordValue.length < 8 ||
+                    !passwordValue.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/)) {
+                    password.addClass('is-invalid');
+                    isValid = false;
+                }
+
+                // Confirm password validation (register only)
+                if (isRegisterForm && confirmPassword.length) {
+                    if (passwordValue !== confirmPassword.val()) {
+                        confirmPassword.addClass('is-invalid');
+                        isValid = false;
+                    }
+                }
+
+                return isValid;
+            }
+
+            function showError(form, message) {
+                const alert = $(`<div class="alert alert-danger mb-3">${message}</div>`);
+                form.prepend(alert);
+                setTimeout(() => alert.fadeOut(() => alert.remove()), 3000);
             }
         });
-
-        function validateForm(form) {
-            let isValid = true;
-            const email = form.find('input[type="email"]');
-            const password = form.find('input[type="password"]');
-
-            if (!email.val().match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
-                email.addClass('is-invalid');
-                isValid = false;
-            } else {
-                email.removeClass('is-invalid');
-            }
-
-            if (password.val().length < 8) {
-                password.addClass('is-invalid');
-                isValid = false;
-            } else {
-                password.removeClass('is-invalid');
-            }
-
-            return isValid;
-        }
-
-        function showError(form, message) {
-            const alert = $(`<div class="alert alert-danger mb-3">${message}</div>`);
-            form.prepend(alert);
-            setTimeout(() => alert.fadeOut(() => alert.remove()), 3000);
-        }
-    });
     </script>
 </body>
+
 </html>

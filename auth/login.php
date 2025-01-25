@@ -8,6 +8,7 @@ header('Content-Type: application/json');
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $database = new Database();
     $db = $database->getConnection();
+    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     
     $email = Validator::sanitizeInput($_POST['email']);
     $password = $_POST['password'];
@@ -39,7 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 'message' => 'Invalid credentials'
             ]);
         }
-    } catch(PDOException $e) {
+    } catch(Throwable $e) {
         echo json_encode([
             'success' => false,
             'message' => 'Database error'

@@ -11,6 +11,7 @@ if (!isset($_SESSION['user_id'])) {
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $database = new Database();
     $db = $database->getConnection();
+    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     
     $name = Validator::sanitizeInput($_POST['name']);
     $description = Validator::sanitizeInput($_POST['description']);
@@ -26,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             'success' => $result,
             'message' => $result ? 'Event created successfully' : 'Failed to create event'
         ]);
-    } catch(PDOException $e) {
+    } catch(Throwable $e) {
         echo json_encode([
             'success' => false,
             'message' => 'Database error: ' . $e->getMessage()
