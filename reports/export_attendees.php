@@ -3,12 +3,14 @@ session_start();
 require_once '../config/database.php';
 require_once '../utils/AdminAuth.php';
 require_once '../utils/Validator.php';
+require_once '../utils/Security.php';
 
 // Verify admin access
 AdminAuth::requireAdmin();
 
-if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    $event_id = Validator::sanitizeInput($_GET['event_id']);
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $encrypted_event_id = $_POST['event_id'];
+    $event_id = Security::decrypt($encrypted_event_id);
     
     $database = new Database();
     $db = $database->getConnection();

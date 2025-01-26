@@ -20,120 +20,127 @@ $isAdmin = AdminAuth::isAdmin();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet">
     <style>
-    :root {
-        --primary: #4f46e5;
-        --primary-hover: #4338ca;
-        --surface: #ffffff;
-        --surface-hover: #f8fafc;
-        --text: #1f2937;
-        --text-light: #6b7280;
-        --success: #10b981;
-        --warning: #f59e0b;
-        --danger: #ef4444;
-    }
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --surface: #ffffff;
+            --surface-hover: #f8fafc;
+            --text: #1f2937;
+            --text-light: #6b7280;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
 
-    body {
-        background: linear-gradient(135deg, #f6f7ff 0%, #eef1ff 100%);
-        font-family: 'Plus Jakarta Sans', sans-serif;
-    }
+        body {
+            background: linear-gradient(135deg, #f6f7ff 0%, #eef1ff 100%);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
 
-    .navbar {
-        backdrop-filter: blur(10px);
-        background: rgba(79, 70, 229, 0.95) !important;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    }
+        .navbar {
+            backdrop-filter: blur(10px);
+            background: rgba(79, 70, 229, 0.95) !important;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
 
-    .card {
-        border: none;
-        border-radius: 1rem;
-        background: var(--surface);
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s ease;
-        overflow: hidden;
-    }
+        .card {
+            border: none;
+            border-radius: 1rem;
+            background: var(--surface);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
 
-    .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-    }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
 
-    .btn {
-        border-radius: 0.75rem;
-        padding: 0.75rem 1.5rem;
-        font-weight: 500;
-        transition: all 0.3s ease;
-    }
+        .btn {
+            border-radius: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
 
-    .btn:hover {
-        transform: translateY(-2px);
-    }
+        .btn:hover {
+            transform: translateY(-2px);
+        }
 
-    .btn-primary {
-        background: var(--primary);
-        border: none;
-    }
+        .btn-primary {
+            background: var(--primary);
+            border: none;
+        }
 
-    .btn-primary:hover {
-        background: var(--primary-hover);
-    }
+        .btn-primary:hover {
+            background: var(--primary-hover);
+        }
 
-    .registration-count {
-        position: absolute;
-        top: 1rem;
-        right: 1rem;
-        background: rgba(79, 70, 229, 0.1);
-        color: var(--primary);
-        padding: 0.5rem 1rem;
-        border-radius: 2rem;
-        font-weight: 500;
-    }
+        .registration-count {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(79, 70, 229, 0.1);
+            color: var(--primary);
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-weight: 500;
+        }
 
-    .modal-content {
-        border-radius: 1rem;
-        border: none;
-    }
+        .modal-content {
+            border-radius: 1rem;
+            border: none;
+        }
 
-    .modal .form-control {
-        border-radius: 0.75rem;
-        padding: 0.75rem 1rem;
-        border: 2px solid #e5e7eb;
-        transition: all 0.3s ease;
-    }
+        .modal .form-control {
+            border-radius: 0.75rem;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e5e7eb;
+            transition: all 0.3s ease;
+        }
 
-    .modal .form-control:focus {
-        border-color: var(--primary);
-        box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
-    }
+        .modal .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+        }
 
-    .loading-spinner {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 1000;
-    }
+        .loading-spinner {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+        }
 
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
 
-    .event-card {
-        animation: fadeIn 0.5s ease-out;
-    }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-    .pagination .page-link {
-        border-radius: 0.5rem;
-        margin: 0 0.25rem;
-        border: none;
-        color: var(--primary);
-    }
+        .event-card {
+            animation: fadeIn 0.5s ease-out;
+        }
 
-    .pagination .page-item.active .page-link {
-        background: var(--primary);
-        color: white;
-    }
-</style>
+        .pagination .page-link {
+            border-radius: 0.5rem;
+            margin: 0 0.25rem;
+            border: none;
+            color: var(--primary);
+        }
+
+        .pagination .page-item.active .page-link {
+            background: var(--primary);
+            color: white;
+        }
+    </style>
 </head>
 
 <body>
@@ -171,11 +178,11 @@ $isAdmin = AdminAuth::isAdmin();
         <!-- Action Buttons -->
         <div class="row mb-4">
             <div class="col">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createEventModal">
+                <button type="button" class="btn btn-primary mb-3 mb-sm-0" data-bs-toggle="modal" data-bs-target="#createEventModal">
                     <i class="bi bi-plus-circle"></i> Create Event
                 </button>
                 <?php if ($isAdmin): ?>
-                    <button type="button" class="btn btn-outline-primary ms-2" data-bs-toggle="modal" data-bs-target="#exportModal">
+                    <button type="button" class="btn btn-outline-primary ms-md-2" data-bs-toggle="modal" data-bs-target="#exportModal">
                         <i class="bi bi-download"></i> Export Attendees
                     </button>
                 <?php endif; ?>
@@ -183,7 +190,7 @@ $isAdmin = AdminAuth::isAdmin();
         </div>
 
         <!-- Filters Section -->
-        <div class="row mb-4">
+        <div class="row mb-4 gap-2 gap-md-0">
             <div class="col-md-4">
                 <div class="input-group">
                     <input type="text" id="searchInput" class="form-control" placeholder="Search events...">
@@ -193,7 +200,7 @@ $isAdmin = AdminAuth::isAdmin();
                 </div>
             </div>
             <div class="col-md-3">
-                <select class="form-select" id="dateFilter">
+                <select class="form-select h-100" id="dateFilter">
                     <option value="all">All Dates</option>
                     <option value="upcoming">Upcoming</option>
                     <option value="today">Today</option>
@@ -201,14 +208,14 @@ $isAdmin = AdminAuth::isAdmin();
                 </select>
             </div>
             <div class="col-md-3">
-                <select class="form-select" id="sortBy">
+                <select class="form-select h-100" id="sortBy">
                     <option value="event_date">Sort by Date</option>
                     <option value="name">Sort by Name</option>
                     <option value="registered_count">Sort by Registrations</option>
                 </select>
             </div>
             <div class="col-md-2">
-                <select class="form-select" id="pageSize">
+                <select class="form-select h-100" id="pageSize">
                     <option value="10">10 per page</option>
                     <option value="25">25 per page</option>
                     <option value="50">50 per page</option>
@@ -225,7 +232,6 @@ $isAdmin = AdminAuth::isAdmin();
 
         <!-- Events Grid -->
         <div id="eventsList" class="row">
-            <!-- Events will be loaded here dynamically -->
         </div>
 
         <!-- Pagination -->
@@ -319,7 +325,6 @@ $isAdmin = AdminAuth::isAdmin();
                         <div class="mb-3">
                             <label for="exportEvent" class="form-label">Select Event</label>
                             <select class="form-select" id="exportEvent">
-                                <!-- Events will be loaded dynamically -->
                             </select>
                         </div>
                         <button id="exportButton" class="btn btn-primary">
@@ -386,7 +391,7 @@ $isAdmin = AdminAuth::isAdmin();
                         const eventDate = new Date(event.event_date);
                         const delay = index * 100;
                         $('#eventsList').append(`
-                            <div class="col-md-4 mb-4">
+                            <div class="col-lg-4 col-md-6 mb-4">
                                 <div class="card event-card" style="animation-delay: ${delay}ms">
                                     <div class="card-body p-4">
                                         <div class="registration-count">
@@ -420,19 +425,19 @@ $isAdmin = AdminAuth::isAdmin();
                         <i class="bi bi-x-circle"></i> Cancel Registration
                     </button>
                 `;
-            } else if (event.registered_count >= event.max_capacity) {
-                buttons += `
+                } else if (event.registered_count >= event.max_capacity && !event.is_admin) {
+                    buttons += `
                     <button class="btn btn-sm btn-secondary" disabled>
                         <i class="bi bi-exclamation-circle"></i> Event Full
                     </button>
                 `;
-            } else if (!event.is_admin) {
-                buttons += `
+                } else if (!event.is_admin) {
+                    buttons += `
                     <button class="btn btn-sm btn-success register-event" data-id="${event.id}">
                         <i class="bi bi-check-circle"></i> Register
                     </button>
                 `;
-            }
+                }
 
                 <?php if ($isAdmin): ?>
                     buttons += `
@@ -442,6 +447,10 @@ $isAdmin = AdminAuth::isAdmin();
                 <button class="btn btn-sm btn-danger ms-2 delete-event" data-id="${event.id}">
                     <i class="bi bi-trash"></i>
                 </button>
+                <a href="attendeeList.php?event_id=${event.id}"
+                class="btn btn-sm btn-info me-2">
+                    <i class="bi bi-people"></i> View Attendees
+                </a>
             `;
                 <?php endif; ?>
 
@@ -453,45 +462,55 @@ $isAdmin = AdminAuth::isAdmin();
                 const $pagination = $('#pagination');
                 $pagination.empty();
 
-                if (pagination.total_pages > 1) {
+                if (pagination && pagination.total_pages > 1) {
                     // Previous button
                     $pagination.append(`
-                    <li class="page-item ${pagination.page === 1 ? 'disabled' : ''}">
-                        <a class="page-link" href="#" data-page="${pagination.page - 1}">Previous</a>
-                    </li>
-                `);
+            <li class="page-item ${pagination.current_page === 1 ? 'disabled' : ''}">
+                <a class="page-link" href="#" data-page="${pagination.current_page - 1}">Previous</a>
+            </li>
+        `);
 
                     // Page numbers
                     for (let i = 1; i <= pagination.total_pages; i++) {
                         if (
                             i === 1 ||
                             i === pagination.total_pages ||
-                            (i >= pagination.page - 2 && i <= pagination.page + 2)
+                            (i >= pagination.current_page - 2 && i <= pagination.current_page + 2)
                         ) {
                             $pagination.append(`
-                            <li class="page-item ${pagination.page === i ? 'active' : ''}">
-                                <a class="page-link" href="#" data-page="${i}">${i}</a>
-                            </li>
-                        `);
+                    <li class="page-item ${pagination.current_page === i ? 'active' : ''}">
+                        <a class="page-link" href="#" data-page="${i}">${i}</a>
+                    </li>
+                `);
                         } else if (
-                            i === pagination.page - 3 ||
-                            i === pagination.page + 3
+                            i === pagination.current_page - 3 ||
+                            i === pagination.current_page + 3
                         ) {
                             $pagination.append(`
-                            <li class="page-item disabled">
-                                <a class="page-link" href="#">...</a>
-                            </li>
-                        `);
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#">...</a>
+                    </li>
+                `);
                         }
                     }
 
                     // Next button
                     $pagination.append(`
-                    <li class="page-item ${pagination.page === pagination.total_pages ? 'disabled' : ''}">
-                        <a class="page-link" href="#" data-page="${pagination.page + 1}">Next</a>
-                    </li>
-                `);
+            <li class="page-item ${pagination.current_page === pagination.total_pages ? 'disabled' : ''}">
+                <a class="page-link" href="#" data-page="${pagination.current_page + 1}">Next</a>
+            </li>
+        `);
                 }
+
+                // Add click handlers for pagination
+                $('.page-link').on('click', function(e) {
+                    e.preventDefault();
+                    const page = $(this).data('page');
+                    if (page && !$(this).parent().hasClass('disabled')) {
+                        currentPage = page;
+                        loadAttendees();
+                    }
+                });
             }
 
             // Event Handlers
@@ -556,7 +575,9 @@ $isAdmin = AdminAuth::isAdmin();
 
             $(document).on('click', '.edit-event', function() {
                 const eventId = $(this).data('id');
-                $.get('events/get_event.php', { event_id: eventId }, function(response) {
+                $.get('events/get_event.php', {
+                    event_id: eventId
+                }, function(response) {
                     const event = JSON.parse(response);
                     if (event.success) {
                         $('#editEventId').val(event.data.id);
@@ -586,7 +607,9 @@ $isAdmin = AdminAuth::isAdmin();
             // Register for event
             $(document).on('click', '.register-event', function() {
                 const eventId = $(this).data('id');
-                $.post('events/register.php', { event_id: eventId }, function(response) {
+                $.post('events/register.php', {
+                    event_id: eventId
+                }, function(response) {
                     const parsedResponse = JSON.parse(response);
                     if (parsedResponse.success) {
                         loadEvents();
@@ -618,8 +641,34 @@ $isAdmin = AdminAuth::isAdmin();
 
             // Handle export button click
             $('#exportButton').on('click', function() {
+                const $btn = $(this);
                 const eventId = $('#exportEvent').val();
-                window.location.href = `reports/export_attendees.php?event_id=${eventId}`;
+                const originalText = $btn.html();
+
+                $btn.prop('disabled', true)
+                    .html('<i class="bi bi-arrow-repeat"></i> Exporting...');
+
+                // Create and submit form
+                const form = $('<form>', {
+                    method: 'POST',
+                    action: 'reports/export_attendees.php',
+                    style: 'display: none'
+                });
+
+                form.append($('<input>', {
+                    type: 'hidden',
+                    name: 'event_id',
+                    value: eventId
+                }));
+
+                $('body').append(form);
+                form.submit();
+
+                // Reset button after delay
+                setTimeout(() => {
+                    $btn.prop('disabled', false).html(originalText);
+                    form.remove();
+                }, 2000);
             });
 
             // Load export events when modal is shown
