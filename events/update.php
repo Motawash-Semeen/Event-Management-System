@@ -2,6 +2,7 @@
 session_start();
 require_once '../config/database.php';
 require_once '../utils/Validator.php';
+require_once '../utils/EventValidator.php';
 
 if (!isset($_SESSION['user_id'])) {
     header('Location: ../index.php');
@@ -19,6 +20,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $event_date = Validator::sanitizeInput($_POST['event_date']);
     $max_capacity = Validator::sanitizeInput($_POST['max_capacity']);
     $user_id = $_SESSION['user_id'];
+    
+    $errors = EventValidator::validateEvent([
+        'name' => $name,
+        'max_capacity' => $max_capacity,
+        'event_date' => $event_date
+    ]);
+    
+    if (!empty($errors)) {
+        echo json_encode([
+            'success' => false,
+            'errors' => $errors
+        ]);
+        exit();
+    }
     
     try {
         // Verify user owns this event

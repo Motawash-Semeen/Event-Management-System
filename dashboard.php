@@ -140,6 +140,20 @@ $isAdmin = AdminAuth::isAdmin();
             background: var(--primary);
             color: white;
         }
+        .form-error {
+            color: #dc3545;
+            font-size: 0.875em;
+            margin-top: 0.25rem;
+        }
+
+        .is-invalid {
+            border-color: #dc3545;
+        }
+
+        .is-invalid:focus {
+            border-color: #dc3545;
+            box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+        }
     </style>
 </head>
 
@@ -216,9 +230,9 @@ $isAdmin = AdminAuth::isAdmin();
             </div>
             <div class="col-md-2">
                 <select class="form-select h-100" id="pageSize">
-                    <option value="10">10 per page</option>
-                    <option value="25">25 per page</option>
-                    <option value="50">50 per page</option>
+                    <option value="9">9 per page</option>
+                    <option value="18">18 per page</option>
+                    <option value="40">40 per page</option>
                 </select>
             </div>
         </div>
@@ -552,7 +566,23 @@ $isAdmin = AdminAuth::isAdmin();
                             $('#createEventForm')[0].reset();
                             loadEvents();
                         }
-                        alert(parsedResponse.message);
+                        if(parsedResponse.errors){
+                            Object.keys(parsedResponse.errors).forEach(field => {
+                                const input = $(`input[name="${field}"], textarea[name="${field}"]`);
+
+                                input.siblings('.invalid-feedback').remove();
+                    
+                                input.addClass('is-invalid')
+                                    .after(`
+                                        <div class="invalid-feedback">
+                                            ${parsedResponse.errors[field]}
+                                        </div>
+                                    `);
+                            });
+                        }
+                        else{
+                            alert(parsedResponse.message);
+                        }
                     });
                 }
             });
@@ -600,7 +630,25 @@ $isAdmin = AdminAuth::isAdmin();
                         $('#editEventModal').modal('hide');
                         loadEvents();
                     }
-                    alert(parsedResponse.message);
+                    console.log(parsedResponse.errors);
+
+                    if(parsedResponse.errors){
+                        Object.keys(parsedResponse.errors).forEach(field => {
+                            const input = $(`input[name="${field}"], textarea[name="${field}"]`);
+
+                            input.siblings('.invalid-feedback').remove();
+                
+                            input.addClass('is-invalid')
+                                .after(`
+                                    <div class="invalid-feedback">
+                                        ${parsedResponse.errors[field]}
+                                    </div>
+                                `);
+                        });
+                    }
+                    else{
+                        alert(parsedResponse.message);
+                    }
                 });
             });
 

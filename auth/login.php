@@ -3,6 +3,8 @@ session_start();
 require_once '../config/database.php';
 require_once '../utils/Validator.php';
 
+date_default_timezone_set('Asia/Dhaka');
+
 header('Content-Type: application/json');
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -27,9 +29,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
         
         if ($user && password_verify($password, $user['password'])) {
+            // Update last login time
+            $updateStmt = $db->prepare("UPDATE users SET last_login_at = ? WHERE id = ?");
+            $updateStmt->execute([date('Y-m-d H:i:s'), $user['id']]);
+            
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['email'] = $user['email'];
             $_SESSION['username'] = $user['username'];
+            
             echo json_encode([
                 'success' => true,
                 'message' => 'Login successful'
@@ -41,6 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             ]);
         }
     } catch(Throwable $e) {
+        error_log($e->getMessage());
         echo json_encode([
             'success' => false,
             'message' => 'Database error'
