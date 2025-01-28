@@ -4,13 +4,17 @@ require_once '../config/database.php';
 require_once '../utils/AdminAuth.php';
 require_once '../utils/Validator.php';
 require_once '../utils/Security.php';
+date_default_timezone_set('Asia/Dhaka');
 
 // Verify admin access
 AdminAuth::requireAdmin();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $encrypted_event_id = $_POST['event_id'];
+    $encrypted_event_id =  Validator::sanitizeInput($_POST['event_id']);
     $event_id = Security::decrypt($encrypted_event_id);
+    if (!$event_id) {
+        throw new Exception('Invalid event ID');
+    }
     
     $database = new Database();
     $db = $database->getConnection();
@@ -54,6 +58,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         
         header('Content-Type: text/csv');
         header('Content-Disposition: attachment; filename="' . $filename . '"');
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Pragma: public');
         
         $output = fopen('php://output', 'w');
         
@@ -91,4 +97,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             'message' => $e->getMessage()
         ]);
     }
+}
+else{
+    header('Content-Type: application/json');
+    echo json_encode([
+        'success' => false,
+        'message' => 'Invalid request method'
+    ]);
 }
