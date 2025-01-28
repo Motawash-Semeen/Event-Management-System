@@ -15,7 +15,7 @@ try {
     $db = $database->getConnection();
     
     $event_id = Security::decrypt($_POST['event_id']);
-    $user_id = $_SESSION['user_id'];
+    $user_id = Security::decrypt($_SESSION['user_id']);
 
     // Check if registration exists
     $checkStmt = $db->prepare("SELECT id FROM event_registrations WHERE event_id = ? AND user_id = ?");

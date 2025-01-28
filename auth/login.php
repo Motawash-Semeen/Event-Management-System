@@ -2,6 +2,7 @@
 session_start();
 require_once '../config/database.php';
 require_once '../utils/Validator.php';
+require_once '../utils/Security.php';
 
 date_default_timezone_set('Asia/Dhaka');
 
@@ -33,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $updateStmt = $db->prepare("UPDATE users SET last_login_at = ? WHERE id = ?");
             $updateStmt->execute([date('Y-m-d H:i:s'), $user['id']]);
             
-            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['user_id'] = Security::encrypt($user['id']);
             $_SESSION['email'] = $user['email'];
             $_SESSION['username'] = $user['username'];
             

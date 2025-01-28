@@ -25,7 +25,7 @@ if (!$event_id || !is_numeric($event_id)) {
     throw new Exception('Invalid event ID format');
 }
 
-$user_id = $_SESSION['user_id'];
+$user_id = Security::decrypt($_SESSION['user_id']);
 $isAdmin = AdminAuth::isAdmin();
 
 try {

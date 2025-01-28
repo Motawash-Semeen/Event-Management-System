@@ -23,6 +23,7 @@ $order = isset($_GET['order']) && strtolower(Validator::sanitizeInput($_GET['ord
 $dateFilter = isset($_GET['date_filter']) ? Validator::sanitizeInput($_GET['date_filter']) : 'all';
 $searchTerm = isset($_GET['search']) ? '%' . Validator::sanitizeInput($_GET['search'] ). '%' : '%';
 $isAdmin = AdminAuth::isAdmin();
+$user_id = Security::decrypt($_SESSION['user_id']);
 
 try {
     // Get total number of events
@@ -60,7 +61,7 @@ try {
         LIMIT ? OFFSET ?
     ";
     $stmt = $db->prepare($eventsQuery);
-    $stmt->bindParam(1, $_SESSION['user_id'], PDO::PARAM_INT);
+    $stmt->bindParam(1, $user_id, PDO::PARAM_INT);
     $stmt->bindParam(2, $searchTerm, PDO::PARAM_STR);
     $stmt->bindParam(3, $searchTerm, PDO::PARAM_STR);
     $stmt->bindParam(4, $limit, PDO::PARAM_INT);
@@ -72,7 +73,7 @@ try {
     foreach ($events as &$event) {
         $event['id'] = Security::encrypt($event['id']);
         $event['is_admin'] = $isAdmin;
-        $event['can_edit'] = $isAdmin || $event['creator_id'] == $_SESSION['user_id'];
+        $event['can_edit'] = $isAdmin || $event['creator_id'] == $user_id;
     }
     
     // Calculate total pages

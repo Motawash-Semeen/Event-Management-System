@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $event_id = Validator::sanitizeInput($_POST['event_id']);
     $event_id = Security::decrypt($event_id);
-    $user_id = $_SESSION['user_id'];
+    $user_id = Security::decrypt($_SESSION['user_id']);
 
     try {
         $check_stmt = $db->prepare("
@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     ");
         $check_stmt->execute([
             $event_id,
-            $_SESSION['user_id'],
+            $user_id,
             AdminAuth::isAdmin()
         ]);
 

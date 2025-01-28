@@ -14,7 +14,7 @@ $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 $encrypted_event_id = isset($_GET['event_id']) ? $_GET['event_id'] : '';
 $event_id = Security::decrypt($encrypted_event_id);
-$user_id = $_SESSION['user_id'];
+$user_id = Security::decrypt($_SESSION['user_id']);
 
 try {
     $stmt = $db->prepare("SELECT id, name, description, event_date, max_capacity FROM events WHERE id = ? AND user_id = ?");

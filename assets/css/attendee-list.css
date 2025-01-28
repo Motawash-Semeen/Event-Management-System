@@ -1,0 +1,153 @@
+:root {
+  --primary: #4f46e5;
+  --primary-hover: #4338ca;
+  --surface: #ffffff;
+  --surface-hover: #f8fafc;
+  --text: #1f2937;
+  --text-light: #6b7280;
+}
+
+body {
+  background: linear-gradient(135deg, #f6f7ff 0%, #eef1ff 100%);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.navbar {
+  backdrop-filter: blur(10px);
+  background: rgba(79, 70, 229, 0.95) !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.table-container {
+  background: var(--surface);
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.table-responsive {
+  overflow-y: visible;
+  overflow-x: scroll;
+}
+
+.form-control,
+.form-select {
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+  border: 2px solid #e5e7eb;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+}
+
+.table th {
+  color: var(--text-light);
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.table th:hover {
+  color: var(--primary);
+}
+
+.attendee-row {
+  transition: all 0.3s ease;
+}
+
+.attendee-row:hover {
+  background: var(--surface-hover);
+  transform: translateX(5px);
+}
+
+.sort-icon {
+  display: inline-block;
+  margin-left: 0.5rem;
+  transition: transform 0.2s ease;
+}
+
+.loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.btn {
+  border-radius: 0.75rem;
+  padding: 0.75rem 1.5rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.pagination .page-link {
+  border-radius: 0.5rem;
+  margin: 0 0.25rem;
+  border: none;
+  color: var(--primary);
+}
+
+.pagination .page-item.active .page-link {
+  background: var(--primary);
+  color: white;
+}
+
+.empty-state {
+  padding: 2rem;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.empty-state i {
+  color: #e5e7eb;
+}
+
+.empty-state h5 {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.empty-state p {
+  font-size: 0.875rem;
+}
+
+.spinner-border-sm {
+  width: 1rem;
+  height: 1rem;
+  margin-right: 0.5rem;
+}
+
+#exportButton {
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+#exportButton:hover {
+  transform: translateY(-2px);
+}
+
+#exportButton:disabled {
+  opacity: 0.7;
+  transform: none;
+}

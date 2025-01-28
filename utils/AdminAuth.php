@@ -1,4 +1,5 @@
 <?php
+require_once 'Security.php';
 class AdminAuth {
     public static function isAdmin() {
         if (!isset($_SESSION['user_id'])) {
@@ -10,7 +11,7 @@ class AdminAuth {
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         
         $stmt = $db->prepare("SELECT is_admin FROM users WHERE id = ?");
-        $stmt->execute([$_SESSION['user_id']]);
+        $stmt->execute([Security::decrypt($_SESSION['user_id'])]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
         
         return $user && $user['is_admin'];

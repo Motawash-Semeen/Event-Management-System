@@ -1,0 +1,132 @@
+:root {
+  --primary: #4f46e5;
+  --primary-hover: #4338ca;
+  --background: #f8fafc;
+  --surface: #ffffff;
+  --text: #1f2937;
+  --error: #ef4444;
+}
+
+body {
+  background: var(--background);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+}
+
+.auth-container {
+  max-width: 400px;
+  margin: 2rem auto;
+  perspective: 1000px;
+}
+
+.auth-forms {
+  position: relative;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+  min-height: 440px;
+}
+
+.form-container {
+  position: absolute;
+  width: 100%;
+  backface-visibility: hidden;
+  background: var(--surface);
+  border-radius: 1rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+}
+
+.login-form {
+  z-index: 2;
+  transform: rotateY(0deg);
+}
+
+.register-form {
+  transform: rotateY(180deg);
+}
+
+.auth-forms.flipped {
+  transform: rotateY(180deg);
+}
+
+.form-control {
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+  border: 2px solid #e5e7eb;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+}
+
+.password-field {
+  position: relative;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #64748b;
+  z-index: 2;
+}
+
+.btn-auth {
+  width: 100%;
+  background: var(--primary);
+  border: none;
+  border-radius: 0.75rem;
+  padding: 0.875rem;
+  color: white;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-auth:hover {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+}
+
+.auth-toggle {
+  text-align: center;
+  margin-top: 1.5rem;
+}
+
+.toggle-btn {
+  background: none;
+  border: none;
+  color: var(--primary);
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.3s ease;
+}
+
+.toggle-btn:hover {
+  color: var(--primary-hover);
+}
+
+@keyframes shake {
+
+  0%,
+  100% {
+      transform: translateX(0);
+  }
+
+  25% {
+      transform: translateX(-10px);
+  }
+
+  75% {
+      transform: translateX(10px);
+  }
+}
+
+.form-control.is-invalid {
+  animation: shake 0.5s ease-in-out;
+}
