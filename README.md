@@ -1,20 +1,19 @@
 # Event Management System
 
-A web-based event management system that allows users to create, manage, and register for events. Administrators can track attendees and export attendance data.
+A web-based event management system that allows users to create, manage, and register for events. Administrators who manage events can track attendees and export attendance data.
 
 ## Features
 
 ### User Features
 - User authentication (login/register)
-- Create and manage events
+- Create and manage their events
 - Register for events
-- View registered events
 - Cancel event registration
 - Search and filter events
 - Responsive design
 
 ### Admin Features
-- View all events
+- View and manage all events
 - Export attendee lists to CSV
 - View event statistics
 - Manage event registrations
@@ -100,15 +99,4 @@ COMMIT;
   Email: kete@mailinator.com
   Password: Pa$$w0rd!
 
-## ToDo
-- [x] Attende List
-- [x] Attende List Download option in CSV
-- [x] Event Sorting and Searching issue
-- [x] Event Registration form and max size validation add
-- [x] ID encryption and Decryption
-- [x] Logout Funcional
-- [ ] UI/UX Improve
-- [ ] Code improve
-- [ ] Ensure client-side and server-side validation.
-- [ ] Use prepared statements to prevent SQL injection.
-- [ ] Provide setup instructions for the project.
+
