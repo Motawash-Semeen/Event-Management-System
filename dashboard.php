@@ -453,19 +453,25 @@ $isAdmin = AdminAuth::isAdmin();
                 `;
                 }
 
+                if (event.can_edit || <?php echo $isAdmin ? 'true' : 'false'; ?>) {
+                    buttons += `
+                        <button class="btn btn-sm btn-primary ms-2 edit-event" data-id="${event.id}">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger ms-2 delete-event" data-id="${event.id}">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    `;
+                }
+
+                // Show attendee list button only for admin
                 <?php if ($isAdmin): ?>
                     buttons += `
-                <button class="btn btn-sm btn-primary ms-2 edit-event" data-id="${event.id}">
-                    <i class="bi bi-pencil"></i>
-                </button>
-                <button class="btn btn-sm btn-danger ms-2 delete-event" data-id="${event.id}">
-                    <i class="bi bi-trash"></i>
-                </button>
-                <a href="attendeeList.php?event_id=${event.id}"
-                class="btn btn-sm btn-info me-2">
-                    <i class="bi bi-people"></i> View Attendees
-                </a>
-            `;
+                        <a href="attendeeList.php?event_id=${event.id}" 
+                        class="btn btn-sm btn-info ms-2">
+                            <i class="bi bi-people"></i> View Attendees
+                        </a>
+                    `;
                 <?php endif; ?>
 
                 return buttons;
@@ -664,6 +670,21 @@ $isAdmin = AdminAuth::isAdmin();
                     }
                     alert(parsedResponse.message);
                 });
+            });
+
+            $(document).on('click', '.cancel-registration', function() {
+                if (confirm('Are you sure you want to cancel your registration?')) {
+                    const eventId = $(this).data('id');
+                    $.post('events/cancel_registration.php', {
+                        event_id: eventId
+                    }, function(response) {
+                        const parsedResponse = response;
+                        if (parsedResponse.success) {
+                            loadEvents();
+                        }
+                        alert(parsedResponse.message);
+                    });
+                }
             });
 
             // Load events for export dropdown

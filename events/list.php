@@ -26,7 +26,7 @@ $isAdmin = AdminAuth::isAdmin();
 
 try {
     // Get total number of events
-    $totalQuery = "SELECT COUNT(*) as total FROM events WHERE user_id = ? AND (name LIKE ? OR description LIKE ?)";
+    $totalQuery = "SELECT COUNT(*) as total FROM events WHERE (name LIKE ? OR description LIKE ?)";
     if ($dateFilter === 'upcoming') {
         $totalQuery .= " AND event_date >= CURDATE()";
     } elseif ($dateFilter === 'today') {
@@ -35,13 +35,13 @@ try {
         $totalQuery .= " AND event_date < CURDATE()";
     }
     $stmt = $db->prepare($totalQuery);
-    $stmt->execute([$_SESSION['user_id'], $searchTerm, $searchTerm]);
+    $stmt->execute([$searchTerm, $searchTerm]);
     $totalEvents = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
     
     // Get events for the current page
     $eventsQuery = "
         SELECT e.id, e.name, e.description, e.event_date, e.max_capacity, 
-               COUNT(er.id) as registered_count,
+               COUNT(er.id) as registered_count, e.user_id as creator_id,
                (SELECT COUNT(*) FROM event_registrations WHERE event_id = e.id AND user_id = ?) as is_registered
         FROM events e
         LEFT JOIN event_registrations er ON e.id = er.event_id
@@ -72,6 +72,7 @@ try {
     foreach ($events as &$event) {
         $event['id'] = Security::encrypt($event['id']);
         $event['is_admin'] = $isAdmin;
+        $event['can_edit'] = $isAdmin || $event['creator_id'] == $_SESSION['user_id'];
     }
     
     // Calculate total pages
