@@ -1,6 +1,6 @@
 # Event Management System
 
-A web-based event management system that allows users to create, manage, and register for events. Administrators who manage events can track attendees and export attendance data.
+A web-based event management system that allows users to create, manage, and register for events. Administrators who manage events can track attendees and export attendance data. Using Ajax to call routes and it utilizes Searching, Sorting, And pagination features across Events and Attendee lists.
 
 ## Features
 
