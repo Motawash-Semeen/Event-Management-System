@@ -35,9 +35,6 @@ $isAdmin = AdminAuth::isAdmin();
                     <li class="nav-item">
                         <a class="nav-link active" href="#" id="eventsTab">Events</a>
                     </li>
-                    <!-- <li class="nav-item">
-                        <a class="nav-link" href="#" id="myRegistrationsTab">My Registrations</a>
-                    </li> -->
                     <?php if ($isAdmin): ?>
                         <li class="nav-item">
                             <a class="nav-link" href="#" id="adminTab">Admin</a>
@@ -270,15 +267,31 @@ $isAdmin = AdminAuth::isAdmin();
                     events.forEach(function(event, index) {
                         const eventDate = new Date(event.event_date);
                         const delay = index * 100;
+                        
+                        const shortDesc = event.description.substring(0, 70);
+                        const hasMoreText = event.description.length > 100;
+                        
                         $('#eventsList').append(`
-                            <div class="col-lg-4 col-md-6 mb-4">
+                            <div class="col-lg-4 col-md-6 mb-4 event-div">
                                 <div class="card event-card" style="animation-delay: ${delay}ms">
                                     <div class="card-body p-4">
                                         <div class="registration-count">
                                             ${event.registered_count}/${event.max_capacity}
                                         </div>
                                         <h5 class="card-title mb-3">${event.name}</h5>
-                                        <p class="card-text text-muted mb-4">${event.description}</p>
+                                        <p class="card-text text-muted mb-4">
+                                            <span class="description-text">
+                                                ${shortDesc}${hasMoreText ? '...' : ''}
+                                            </span>
+                                            <span class="description-full d-none">
+                                                ${event.description}
+                                            </span>
+                                            ${hasMoreText ? `
+                                                <a href="#" class="text-primary description-toggle">
+                                                    See more
+                                                </a>
+                                            ` : ''}
+                                        </p>
                                         <div class="d-flex align-items-center mb-3">
                                             <i class="bi bi-calendar me-2 text-primary"></i>
                                             <span class="text-muted">${eventDate.toLocaleDateString()}</span>
@@ -335,7 +348,7 @@ $isAdmin = AdminAuth::isAdmin();
                     buttons += `
                         <a href="attendeeList.php?event_id=${event.id}" 
                         class="btn btn-sm btn-info ms-2">
-                            <i class="bi bi-people"></i> View Attendees
+                            <i class="bi bi-people"></i> Attendees
                         </a>
                     `;
                 <?php endif; ?>
@@ -351,10 +364,10 @@ $isAdmin = AdminAuth::isAdmin();
                 if (pagination && pagination.total_pages > 1) {
                     // Previous button
                     $pagination.append(`
-            <li class="page-item ${pagination.current_page === 1 ? 'disabled' : ''}">
-                <a class="page-link" href="#" data-page="${pagination.current_page - 1}">Previous</a>
-            </li>
-        `);
+                        <li class="page-item ${pagination.current_page === 1 ? 'disabled' : ''}">
+                            <a class="page-link" href="#" data-page="${pagination.current_page - 1}">Previous</a>
+                        </li>
+                    `);
 
                     // Page numbers
                     for (let i = 1; i <= pagination.total_pages; i++) {
@@ -364,28 +377,28 @@ $isAdmin = AdminAuth::isAdmin();
                             (i >= pagination.current_page - 2 && i <= pagination.current_page + 2)
                         ) {
                             $pagination.append(`
-                    <li class="page-item ${pagination.current_page === i ? 'active' : ''}">
-                        <a class="page-link" href="#" data-page="${i}">${i}</a>
-                    </li>
-                `);
+                                <li class="page-item ${pagination.current_page === i ? 'active' : ''}">
+                                    <a class="page-link" href="#" data-page="${i}">${i}</a>
+                                </li>
+                            `);
                         } else if (
                             i === pagination.current_page - 3 ||
                             i === pagination.current_page + 3
                         ) {
                             $pagination.append(`
-                    <li class="page-item disabled">
-                        <a class="page-link" href="#">...</a>
-                    </li>
-                `);
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#">...</a>
+                                </li>
+                            `);
                         }
                     }
 
                     // Next button
                     $pagination.append(`
-            <li class="page-item ${pagination.current_page === pagination.total_pages ? 'disabled' : ''}">
-                <a class="page-link" href="#" data-page="${pagination.current_page + 1}">Next</a>
-            </li>
-        `);
+                        <li class="page-item ${pagination.current_page === pagination.total_pages ? 'disabled' : ''}">
+                            <a class="page-link" href="#" data-page="${pagination.current_page + 1}">Next</a>
+                        </li>
+                    `);
                 }
 
                 // Add click handlers for pagination
@@ -649,6 +662,22 @@ $isAdmin = AdminAuth::isAdmin();
                 }
 
                 return isValid;
+            }
+        });
+        $(document).on('click', '.description-toggle', function(e) {
+            e.preventDefault();
+            const card = $(this).closest('.card-body');
+            const shortDesc = card.find('.description-text');
+            const fullDesc = card.find('.description-full');
+        
+            if (shortDesc.hasClass('d-none')) {
+                shortDesc.removeClass('d-none');
+                fullDesc.addClass('d-none');
+                $(this).text('See more');
+            } else {
+                shortDesc.addClass('d-none');
+                fullDesc.removeClass('d-none');
+                $(this).text('See less');
             }
         });
     </script>

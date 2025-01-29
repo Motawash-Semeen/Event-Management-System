@@ -159,7 +159,7 @@
                 // Reset validation states
                 form.find('.is-invalid').removeClass('is-invalid');
 
-                // Username validation (register only)
+                // Username validation
                 if (isRegisterForm && username.length) {
                     if (!username.val()?.trim()) {
                         username.addClass('is-invalid');
@@ -181,7 +181,7 @@
                     isValid = false;
                 }
 
-                // Confirm password validation (register only)
+                // Confirm password validation
                 if (isRegisterForm && confirmPassword.length) {
                     if (passwordValue !== confirmPassword.val()) {
                         confirmPassword.addClass('is-invalid');

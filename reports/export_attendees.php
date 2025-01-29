@@ -63,21 +63,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         
         $output = fopen('php://output', 'w');
         
-        // Add UTF-8 BOM for Excel compatibility
         fprintf($output, chr(0xEF).chr(0xBB).chr(0xBF));
         
-        // Write headers
         fputcsv($output, [
             'Event Name: ' . $event['name'],
             'Event Date: ' . $event['event_date'],
             'Export Date: ' . date('Y-m-d H:i:s')
         ]);
-        fputcsv($output, []); // Empty row for spacing
+        fputcsv($output, []);
         
-        // Write column headers
         fputcsv($output, ['Attendee Name', 'Email', 'Registration Date', 'Status']);
         
-        // Write data
         foreach ($attendees as $attendee) {
             fputcsv($output, [
                 $attendee['attendee_name'],
